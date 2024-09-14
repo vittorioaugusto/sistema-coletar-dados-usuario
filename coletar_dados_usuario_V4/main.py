@@ -62,9 +62,6 @@ def obter_cidade():
 
 def obter_profissao():
     while True:
-        print("\nProfissões disponíveis: ")
-        for profissao in PROFISSOES + PROFISSOES_PROGRAMACAO:
-            print(f"- {profissao}")
         profissao = input("\nQual a sua profissão? ").strip().title()
         if profissao in PROFISSOES + PROFISSOES_PROGRAMACAO + [
             "Desempregado",
@@ -73,6 +70,9 @@ def obter_profissao():
         ]:
             return profissao
         else:
+            print("\nProfissões disponíveis: ")
+            for profissao in PROFISSOES + PROFISSOES_PROGRAMACAO:
+                print(f"- {profissao}")
             profissao = (
                 input(
                     "Caso não tenha uma profissão, selecionar 'Desempregado', 'Estudante' ou 'Aposentado' "

@@ -38,6 +38,19 @@ def obter_idade():
             print("Idade inválida. Por favor, insira um número inteiro.")
 
 
+def obter_genero():
+    while True:
+        genero = (
+            input("Qual é o seu gênero (Masculino/Feminino/Outro)? ").strip().title()
+        )
+        if genero in ["Masculino", "Feminino", "Outro"]:
+            return genero
+        else:
+            print(
+                "Entrada inválida. Por favor, insira 'Masculino', 'Feminino' ou 'Outro'."
+            )
+
+
 def validar_telefone(telefone):
     return re.match(r"^\(?\d{2}\)?\s?\d{4,5}-\d{4}$", telefone) is not None
 
@@ -98,31 +111,38 @@ def obter_cep():
 
 def obter_profissao():
     while True:
-        profissao = input("\nQual a sua profissão? ").strip().title()
-        if profissao in PROFISSOES + PROFISSOES_PROGRAMACAO + [
-            "Desempregado",
-            "Estudante",
-            "Aposentado",
-        ]:
-            return profissao
+        profissao = input("\nQual a sua profissão? ").strip().lower()
+        todas_profissoes = [
+            p.lower()
+            for p in (
+                PROFISSOES
+                + PROFISSOES_PROGRAMACAO
+                + ["Desempregado", "Estudante", "Aposentado"]
+            )
+        ]
+
+        if profissao in todas_profissoes:
+
+            for p in (
+                PROFISSOES
+                + PROFISSOES_PROGRAMACAO
+                + ["Desempregado", "Estudante", "Aposentado"]
+            ):
+                if p.lower() == profissao:
+                    return p
         else:
             print("\nProfissões disponíveis: ")
-            for profissao in PROFISSOES + PROFISSOES_PROGRAMACAO:
-                print(f"- {profissao}")
+            for profissao_disponivel in PROFISSOES + PROFISSOES_PROGRAMACAO:
+                print(f"- {profissao_disponivel}")
             profissao = (
                 input(
                     "Caso não tenha uma profissão, selecionar 'Desempregado', 'Estudante' ou 'Aposentado' "
                 )
                 .strip()
-                .title()
+                .lower()
             )
-            if (
-                profissao
-                in ["Desempregado", "Estudante", "Aposentado"]
-                + PROFISSOES
-                + PROFISSOES_PROGRAMACAO
-            ):
-                return profissao
+            if profissao in ["desempregado", "estudante", "aposentado"]:
+                return profissao.title()
 
 
 def obter_linguagem():
@@ -143,6 +163,7 @@ def dados_usuario(cpf):
     global id
     nome = obter_nome()
     idade = obter_idade()
+    genero = obter_genero()
     telefone = obter_telefone()
     cep = obter_cep()
     profissao = obter_profissao()
@@ -157,6 +178,7 @@ def dados_usuario(cpf):
         "cpf": cpf,
         "nome": nome,
         "idade": idade,
+        "genero": genero,
         "telefone": telefone,
         "cep": cep,
         "profissao": profissao,
@@ -192,10 +214,11 @@ def listar_usuarios():
     else:
         for usuario in USUARIOS:
             print(f"\n### Dados do Usuário ###")
-            print(f'ID {usuario['id']}')
+            print(f"ID {usuario['id']}")
             print(f"CPF: {usuario['cpf']}")
             print(f"Nome: {usuario['nome']}")
             print(f"Idade: {usuario['idade']} anos")
+            print(f"Gênero: {usuario['genero']}")
             print(f"Telefone: {usuario['telefone']}")
             print(f"CEP: {usuario['cep']['cep']}")
             print(f"Rua: {usuario['cep']['rua']}")
@@ -230,6 +253,7 @@ def main():
                 print(f"CPF: {usuario['cpf']}")
                 print(f"Nome: {usuario['nome']}")
                 print(f"Idade: {usuario['idade']} anos")
+                print(f"Gênero: {usuario['genero']}")
                 print(f"Telefone: {usuario['telefone']}")
                 print(f"CEP: {usuario['cep']['cep']}")
                 print(f"Rua: {usuario['cep']['rua']}")
