@@ -1,10 +1,10 @@
 # Coletador de Dados de Usuário
 
-## Versão 5:
+## Versão 6:
 
 ### Lista de Dados:
 
-**PROFISSOES, PROFISSOES_PROGRAMACAO, LINGUAGENS_PROGRAMACAO**
+**PROFISSOES, PROFISSOES_PROGRAMACAO, LINGUAGENS_PROGRAMACAO, DIAS_SEMANA, MESES**
 
 ### Dados do Usuário:
 
@@ -12,6 +12,8 @@
 - cpf
 - nome
 - idade
+- genero
+- email
 - telefone
 - cep
 - profissao
