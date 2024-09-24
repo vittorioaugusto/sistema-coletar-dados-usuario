@@ -110,11 +110,14 @@ class ColetarDadosUsuario:
             if genero.lower() == "s":
                 print("Cadastro de usuário cancelado.\n")
                 return None
-            if genero in ["Masculino" or 'Mas', "Feminino" or 'Fem', "Outro" or 'Out']:
-                return genero
+
+            generos_map = {"Mas": "Masculino", "Fem": "Feminino", "Out": "Outro"}
+
+            if genero in ["Masculino", "Feminino", "Outro"] or genero in generos_map:
+                return generos_map.get(genero, genero)
             else:
                 print(
-                    "Entrada inválida. Por favor, insira 'Masculino', 'Feminino' ou 'Outro'."
+                    "Entrada inválida. Por favor, insira 'Masculino', 'Feminino', 'Outro' ou as abreviações 'Mas', 'Fem', 'Out'."
                 )
 
     def validar_email(self, email):
