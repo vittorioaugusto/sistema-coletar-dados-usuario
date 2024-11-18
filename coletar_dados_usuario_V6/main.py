@@ -245,7 +245,7 @@ class ColetarDadosUsuario:
                 return linguagem
             else:
                 print(
-                    "\nLinguagem de programação inválida. Escolha uma das listadas acima.\n"
+                    "\nLinguagem não encontrada. Por favor, escolha uma das opções disponíveis."
                 )
 
     def cadastrar_usuario(self):
@@ -255,7 +255,7 @@ class ColetarDadosUsuario:
 
         for usuario in self.usuarios:
             if usuario.cpf == cpf:
-                print("\nCPF já cadastrado. Tente novamente com um CPF diferente.")
+                print("\nErro: Usuário com este CPF já cadastrado.")
                 return
 
         nome = self.obter_nome()
@@ -286,25 +286,17 @@ class ColetarDadosUsuario:
         if profissao is None:
             return
 
+        linguagem = None
         if profissao in PROFISSOES_PROGRAMACAO:
             linguagem = self.obter_linguagem()
             if linguagem is None:
                 return
-        else:
-            linguagem = None
 
         usuario = Usuario(
             cpf, nome, idade, genero, email, telefone, cep, profissao, linguagem
         )
         self.usuarios.append(usuario)
         print("\nUsuário cadastrado com sucesso!\n")
-
-    def consultar_usuario(self):
-        cpf = self.obter_cpf()
-        for usuario in self.usuarios:
-            if usuario.cpf == cpf:
-                return usuario
-        return None
 
     def listar_usuarios(self):
         if not self.usuarios:
@@ -313,6 +305,143 @@ class ColetarDadosUsuario:
             for usuario in self.usuarios:
                 usuario.exibir_dados()
 
+    def consultar_usuario(self):
+        cpf = self.obter_cpf()
+        if cpf is None:
+            return
+
+        for usuario in self.usuarios:
+            if usuario.cpf == cpf:
+                return usuario
+
+        return None
+
+    def editar_usuario(self):
+        cpf = self.obter_cpf()
+        if cpf is None:
+            return
+
+        usuario = None
+        for u in self.usuarios:
+            if u.cpf == cpf:
+                usuario = u
+                break
+
+        if usuario is None:
+            print("\nUsuário não encontrado.")
+            return
+
+        print(f"\nEditando dados do usuário: {usuario.nome}")
+
+        while True:
+            print("\nEscolha o dado que deseja editar:")
+            print("[1] Nome")
+            print("[2] Idade")
+            print("[3] Gênero")
+            print("[4] Email")
+            print("[5] Telefone")
+            print("[6] CEP")
+            print("[7] Profissão")
+            print("[8] Linguagem de Programação")
+            print("[9] Cancelar edição")
+
+            opcao = input("Digite o número da opção: ").strip()
+
+            if opcao == "1":
+                novo_nome = self.obter_nome()
+                if novo_nome:
+                    usuario.nome = novo_nome
+                    print(f"\nNome atualizado para {usuario.nome}")
+
+            elif opcao == "2":
+                nova_idade = self.obter_idade()
+                if nova_idade is not None:
+                    usuario.idade = nova_idade
+                    print(f"\nIdade atualizada para {usuario.idade} anos")
+
+            elif opcao == "3":
+                novo_genero = self.obter_genero()
+                if novo_genero:
+                    usuario.genero = novo_genero
+                    print(f"\nGênero atualizado para {usuario.genero}")
+
+            elif opcao == "4":
+                novo_email = self.obter_email()
+                if novo_email:
+                    usuario.email = novo_email
+                    print(f"\nEmail atualizado para {usuario.email}")
+
+            elif opcao == "5":
+                novo_telefone = self.obter_telefone()
+                if novo_telefone:
+                    usuario.telefone = novo_telefone
+                    print(f"\nTelefone atualizado para {usuario.telefone}")
+
+            elif opcao == "6":
+                novo_cep = self.obter_cep()
+                if novo_cep:
+                    usuario.cep = novo_cep
+                    print(f"\nCEP atualizado.")
+
+            elif opcao == "7":
+                nova_profissao = self.obter_profissao()
+                if nova_profissao:
+                    usuario.profissao = nova_profissao
+                    if nova_profissao in PROFISSOES_PROGRAMACAO:
+                        nova_linguagem = self.obter_linguagem()
+                        if nova_linguagem:
+                            usuario.linguagem = nova_linguagem
+                    else:
+                        usuario.linguagem = None
+                    print(f"\nProfissão atualizada para {usuario.profissao}")
+
+            elif opcao == "8":
+                if usuario.profissao in PROFISSOES_PROGRAMACAO:
+                    nova_linguagem = self.obter_linguagem()
+                    if nova_linguagem:
+                        usuario.linguagem = nova_linguagem
+                        print(
+                            f"\nLinguagem de Programação atualizada para {usuario.linguagem}"
+                        )
+                else:
+                    print(
+                        "\nEste usuário não tem uma profissão relacionada à programação."
+                    )
+
+            elif opcao == "9":
+                print("Edição cancelada.")
+                break
+
+            else:
+                print("Opção inválida. Tente novamente.")
+
+    def excluir_usuario(self):
+        cpf = self.obter_cpf()
+        if cpf is None:
+            return
+
+        usuario_a_remover = None
+        for usuario in self.usuarios:
+            if usuario.cpf == cpf:
+                usuario_a_remover = usuario
+                break
+
+        if usuario_a_remover:
+            confirmacao = (
+                input(
+                    f"Tem certeza que deseja excluir o usuário {usuario_a_remover.nome}? (s/n): "
+                )
+                .strip()
+                .lower()
+            )
+            if confirmacao == "s":
+                self.usuarios.remove(usuario_a_remover)
+                print(f"\nUsuário {usuario_a_remover.nome} foi excluído com sucesso!\n")
+            else:
+                print("\nExclusão cancelada.")
+        else:
+            print("\nUsuário não encontrado.\n")
+
     def menu_principal(self):
         while True:
             print(" Bem vindo ao Sistema Coletar Dados ".center(50, "#"))
@@ -320,7 +449,9 @@ class ColetarDadosUsuario:
             print("[1] Cadastrar Usuário")
             print("[2] Consultar Usuário pelo CPF")
             print("[3] Listar Todos os Usuários Cadastrados")
-            print("[4] Sair do Sistema")
+            print("[4] Editar Usuário")
+            print("[5] Excluir Usuário")
+            print("[6] Sair do Sistema")
 
             opcao = input("\nEscolha uma opção: ").strip()
 
@@ -338,6 +469,12 @@ class ColetarDadosUsuario:
                 print("Você selecionou: Listar Todos os Usuários Cadastrados")
                 self.listar_usuarios()
             elif opcao == "4":
+                print("Você selecionou: Editar Usuário")
+                self.editar_usuario()
+            elif opcao == "5":
+                print("Você selecionou: Excluir Usuário")
+                self.excluir_usuario()
+            elif opcao == "6":
                 print("\nSaindo do sistema. Até mais!")
                 break
             else:
